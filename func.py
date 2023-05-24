@@ -6,9 +6,9 @@
 # DISCLAIMER This is not an official Oracle application,  It does not supported by Oracle Support,
 # It should NOT be used for utilization calculation purposes, and rather OCI's official
 #
-# usage2adw.py
+# func.py
 #
-# @author: Adi Zohar
+# @author: Scott Herman, Adi Zohar
 #
 # Supports Python 3 and above
 #
@@ -18,10 +18,12 @@
 #
 # Required OCI user part of UsageDownloadGroup with below permission:
 #   define tenancy usage-report as ocid1.tenancy.oc1..aaaaaaaaned4fkpkisbwjlr56u7cj63lf3wffbilvqknstgtvzub7vhqkggq
-#   endorse group UsageDownloadGroup to read objects in tenancy usage-report
-#   Allow group UsageDownloadGroup to inspect compartments in tenancy
-#   Allow group UsageDownloadGroup to inspect tenancies in tenancy
-#   Allow group UsageDownloadGroup to read autonomous-database in compartment {APPCOMP}
+#   endorse dynamic-group UsageDownloadGroup to read objects in tenancy usage-report
+#   Allow dynamic-group UsageDownloadGroup to inspect compartments in tenancy
+#   Allow dynamic-group UsageDownloadGroup to inspect tenancies in tenancy
+#   Allow gdynamic-roup UsageDownloadGroup to read autonomous-database in compartment {APPCOMP}
+#   Allow dynamic-dynamic-group sdh-UsageDownloadGroup to read secret-family in compartment {VAULTCOMP} where target.secret.name = '{SECNAME}'
+
 #
 ##########################################################################
 # Database user:
@@ -32,6 +34,7 @@
 # Modules Included:
 # - oci.object_storage.ObjectStorageClient
 # - oci.identity.IdentityClient
+# - oci.secrets.SecretsClient
 #
 # APIs Used:
 # - IdentityClient.list_compartments          - Policy COMPARTMENT_INSPECT
@@ -39,6 +42,7 @@
 # - IdentityClient.list_region_subscriptions  - Policy TENANCY_INSPECT
 # - ObjectStorageClient.list_objects          - Policy OBJECT_INSPECT
 # - ObjectStorageClient.get_object            - Policy OBJECT_READ
+# - secret_client.get_secret_bundle           - Get Password from Vault Service
 #
 # Meter API for Public Rate:
 # - https://apexapps.oracle.com/pls/apex/cetools/api/v1/products/?currencyCode=USD
@@ -90,17 +94,6 @@ def handler(ctx, data: io.BytesIO=None):
    return response.Response(ctx,
       response_data=json.dumps(resp),
       headers={"Content-Type": "application/json"})
-
-##########################################################################
-# Print header centered
-##########################################################################
-def print_header(name, category):
-    options = {0: 90, 1: 60, 2: 30}
-    chars = int(options[category])
-
-    logging.info('#' * chars)
-    logging.info("#" + name.center(chars - 2, " ") + "#")
-    logging.info('#' * chars)
 
 
 ##########################################################################
@@ -191,10 +184,7 @@ def identity_read_compartments(identity, tenancy):
 ##########################################################################
 # set parser
 ##########################################################################
-#def set_parser_arguments():
-    #parser = argparse.ArgumentParser()
 
-    #parser.add_argument('-c', type=argparse.FileType('r'), dest='config', help="Config File")
     #parser.add_argument('-t', default="", dest='profile', help='Config file section to use (tenancy profile)')
     #parser.add_argument('-f', default="", dest='fileid', help='File Id to load')
     #parser.add_argument('-ts', default="", dest='tagspecial', help='tag special key 1 to load the data to TAG_SPECIAL column')
@@ -211,14 +201,6 @@ def identity_read_compartments(identity, tenancy):
     #parser.add_argument('--force', action='store_true', default=False, dest='force', help='Force Update without updated file')
     #parser.add_argument('--version', action='version', version='%(prog)s ' + version)
 
-    #result = parser.parse_args()
-
-    #if not (result.duser and result.dpass and result.dname):
-    #    parser.print_help()
-    #    print_header("You must specify database credentials!!", 0)
-    #    return None
-
-    #return result
 
 
 ##########################################################################
