@@ -18,8 +18,6 @@ RUN mkdir /tmp/wallet
 RUN mkdir /tmp/work_report_dir
 RUN chown -R fn:fn /tmp/wallet
 RUN chown -R fn:fn /tmp/work_report_dir
-#ENV CLIENT_HOME=/usr/lib/oracle/current/client64
-#ENV PATH=$PATH:$CLIENT_HOME/bin
 ENV TNS_ADMIN=/tmp/wallet
 ENV proxy=
 ENV tagspecial=
@@ -30,7 +28,6 @@ ENV fileid=
 ADD . /function/
 RUN alternatives --set python3 /usr/bin/python3.9 
 RUN python3 -m pip install --upgrade pip
-#RUN python3 -m pip install pip
 RUN python3 -m pip install --no-cache --no-cache-dir -r requirements.txt
 RUN rm -fr /function/.pip_cache ~/.cache/pip requirements.txt func.yaml Dockerfile README.md
 

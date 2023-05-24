@@ -22,8 +22,7 @@
 #   Allow dynamic-group UsageDownloadGroup to inspect compartments in tenancy
 #   Allow dynamic-group UsageDownloadGroup to inspect tenancies in tenancy
 #   Allow gdynamic-roup UsageDownloadGroup to read autonomous-database in compartment {APPCOMP}
-#   Allow dynamic-dynamic-group sdh-UsageDownloadGroup to read secret-family in compartment {VAULTCOMP} where target.secret.name = '{SECNAME}'
-
+#   Allow dynamic-dynamic-group UsageDownloadGroup to read secret-family in compartment {VAULTCOMP} where target.secret.name = '{SECNAME}'
 #
 ##########################################################################
 # Database user:
