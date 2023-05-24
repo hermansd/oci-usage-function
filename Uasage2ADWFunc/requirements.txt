@@ -1,0 +1,8 @@
+fdk
+oci
+oci-cli
+oracledb
+requests
+pandas
+openpyxl
+cx_Oracle
